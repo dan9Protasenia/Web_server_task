@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "web-server"
+version = "0.1.0"
+description = ""
+authors = ["Daniil Protasenia <danikprotaseney@gmail.com>"]
+readme = "README.md"
+
+
+
+[tool.poetry.dependencies]
+python = "^3.11"
+flake8 = "^6.1.0"
+locust = "^2.20.0"
+aiohttp = "^3.9.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

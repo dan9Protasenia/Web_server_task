@@ -1,4 +1,3 @@
-
 # Sync and Async Web Server on Python
 
 ## Objective
@@ -44,9 +43,28 @@ Develop web servers in Python in 2 versions: a fisrt simple synchronous (sync) w
 ### Submission:
 - Submit the codebase along with a brief README explaining how to run both the sync and async servers and any additional features implemented.
 
-### Requirements:
-- Write this solution as a separate project.
+### Note:
+- You are free to use any additional libraries or tools you find suitable for the task.
+- Make sure to adhere to best practices in terms of code readability, structure, and documentation also dont forget about PEP8.
 - Use Python 3.10 or above.
 - Use poetry as dependency manager and config storage.
 - Add popular linters and formattetes.
-- Write code in PEP8 standart.
+
+
+### Proposed project structure:
+```
+./
+├── src/
+│   ├── async/
+│   │   ├── __init__.py
+│   │   └── main.py
+│   ├── sync/
+│   │   ├── __init__.py
+│   │   └── main.py
+│   └── __init__.py
+├── .env
+├── .env.example
+├── .gitignore
+├── README.md
+└── task.md
+```

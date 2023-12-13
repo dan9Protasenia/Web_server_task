@@ -1,7 +1,7 @@
 # Sync and Async Web Server on Python
 
 ## Objective
-Develop web servers in Python in 2 versions: a fisrt simple synchronous (sync) web server using only the `socket` module and second an asynchronous (async) web server using the `aiohttp` framework.
+Develop web servers in Python in 2 versions: a first simple synchronous (sync) web server using only the `socket` module and second an asynchronous (async) web server using the `aiohttp` framework.
 
 ### Main Steps:
 1. **Synchronous (Sync) Web Server:**
@@ -22,7 +22,7 @@ Develop web servers in Python in 2 versions: a fisrt simple synchronous (sync) w
    - Use asynchronous programming features provided by `aiohttp`.
    - Demonstrate the use of asynchronous functions, `asyncio`, and the `aiohttp` library to handle requests concurrently.
 
-### Additional Challenges (For bouth servers):
+### Additional Challenges (For both servers):
 1. **Middleware:**
    - Implement a middleware that adds a custom header to every response.
 
@@ -36,7 +36,7 @@ Develop web servers in Python in 2 versions: a fisrt simple synchronous (sync) w
    - Write unit tests for the main functionality of both the sync and async servers.
 
 5. **Stress-test**
-    - Add in each server several endopoints to simulate I/O & CPU bound tasks and something else to simulate error on server-side e.g. _/io_task_, _/cpu_task_, _/error_task_, etc.
+    - Add in each server several endpoints to simulate I/O & CPU bound tasks and something else to simulate error on server-side e.g. _/io_task_, _/cpu_task_, _/error_task_, etc.
     - Install `locust` package in your local env and write a script to stress-test two servers.
     - It would be cool to plot a graph on the data obtained from locust and put it in the documentation.
 
@@ -45,10 +45,10 @@ Develop web servers in Python in 2 versions: a fisrt simple synchronous (sync) w
 
 ### Note:
 - You are free to use any additional libraries or tools you find suitable for the task.
-- Make sure to adhere to best practices in terms of code readability, structure, and documentation also dont forget about PEP8.
+- Make sure to adhere to best practices in terms of code readability, structure, and documentation also don't forget about PEP8.
 - Use Python 3.10 or above.
 - Use poetry as dependency manager and config storage.
-- Add popular linters and formattetes.
+- Add popular linters and formatters.
 
 
 ### Proposed project structure:

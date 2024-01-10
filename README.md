@@ -22,7 +22,7 @@ Manage project dependencies using `poetry`. The `poetry.lock` and `pyproject.tom
 Install `poetry` if it is not already installed:
 
 ```
-pip install poetry
+curl -sSL https://install.python-poetry.org | python - --version 1.7.1
 ```
 
 Clone the repository and navigate to its directory:

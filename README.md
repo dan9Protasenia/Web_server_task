@@ -48,7 +48,7 @@ poetry install
 To start the server, use the command:
 
 ```sh
-poetry run src/sync/main.py
+poetry run python src.sync.main.py
 ```
 
 </p>

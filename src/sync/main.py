@@ -1,50 +1,61 @@
 import socket
 import time
 import random
-from constant import LOCAL_HOST_SYNC, port_sync
+from .constant import SyncHost, SyncPort, Path, HTTPStatus, HTTPResponses
 
 
 def add_custom_header_middleware(response):
-    response += "\r\nX-Custom-Header: MyCustomHeader"
+    headers_end = response.find("\r\n\r\n") + 2
+
+    response = (
+            response[:headers_end] +
+            HTTPResponses.CUSTOM_HEADER.value +
+            response[headers_end:]
+    )
     return response
 
 
 def handle_request(conn):
     request_data = conn.recv(1024).decode('utf-8')
-
     request = request_data.split('\n')
     path = request[0].split()[1]
 
-    if path == "/hello":
-        response = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\nHello, World!"
-    elif path == "/io_task":
+    if path == Path.HELLO.value:
+        response = HTTPResponses.HELLO.value
+
+    elif path == Path.IO_TASK.value:
         time.sleep(1)
-        response = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\nI/O Task"
-    elif path == "/cpu_task":
+        response = HTTPResponses.IO_TASK.value
+
+    elif path == Path.CPU_TASK.value:
         result = sum(i for i in range(10 ** 6))
-        response = f"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\nCPU Task: {result}"
-    elif path == "/random_sleep":
+        response = HTTPResponses.CPU_TASK.value.format(status=HTTPStatus.OK.value, result=result)
+
+    elif path == Path.RANDOM_SLEEP.value:
         sleep_time = random.uniform(0.1, 1.0)
         time.sleep(sleep_time)
-        response = f"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\nRandom Sleep: {sleep_time} seconds"
-    elif path == "/random_status":
+        response = HTTPResponses.RANDOM_SLEEP.value.format(status=HTTPStatus.OK.value, sleep_time=sleep_time)
+
+    elif path == Path.RANDOM_STATUS.value:
         status_code = random.choice([200, 404, 500])
-        response = (f"HTTP/1.1 {status_code} {status_code_map[status_code]}"
-                    f"\r\nContent-Type: text/plain\r\n\r\nRandom Status: {status_code}")
-    elif path == "/chain":
-        response1 = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\nChain Step 1"
-        conn.sendall(response1.encode('utf-8'))
+        reason = status_code_map[status_code]
+        response = HTTPResponses.RANDOM_STATUS.value.format(status_code=status_code, reason=reason)
+
+    elif path == Path.CHAIN.value:
+        response = HTTPResponses.CHAIN_STEP_1.value
+        conn.sendall(response.encode('utf-8'))
         time.sleep(0.5)
-        response2 = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\nChain Step 2"
-        conn.sendall(response2.encode('utf-8'))
+        response = HTTPResponses.CHAIN_STEP_2.value
+        conn.sendall(response.encode('utf-8'))
         return
-    elif path == "/error_test":
-        response = "HTTP/1.1 500 Internal Server Error\r\nContent-Type: text/plain\r\n\r\nError Test"
+
+    elif path == Path.ERROR_TEST.value:
+        response = HTTPResponses.ERROR_TEST.value
+
     else:
-        response = "HTTP/1.1 404 Not Found\r\nContent-Type: text/plain\r\n\r\n404 Not Found"
+        response = HTTPResponses.NOT_FOUND_RESPONSE.value
 
     response = add_custom_header_middleware(response)
-
     conn.sendall(response.encode('utf-8'))
     conn.close()
 
@@ -58,13 +69,13 @@ status_code_map = {
 
 def start():
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    sock.bind((LOCAL_HOST_SYNC, port_sync))
+    sock.bind((SyncHost.LOCALHOST.value, SyncPort.PORT.value))
     sock.listen(1)
-    print(f'Server listening on port {port_sync}')
+    print(f'Server listening on port {SyncPort.PORT.value}')
 
     while True:
         conn, addr = sock.accept()
-        print(f"Address: {addr}, Port: {port_sync}")
+        print(f"Address: {addr}, Port: {SyncPort.PORT.value}")
         handle_request(conn)
 
 

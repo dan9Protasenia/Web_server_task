@@ -20,9 +20,9 @@ class HTTPTestRequests(Enum):
 class HTTPTestResponses(Enum):
     HELLO = b'HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nX-Custom-Header: MyCustomHeader\r\n\r\nHello, World!'
     IO_TASK = b'HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nX-Custom-Header: MyCustomHeader\r\n\r\nI/O Task'
-    CPU_TASK = 'HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nX-Custom-Header: MyCustomHeader\r\n\r\nCPU Task: {result}'  # Возможно потребуется форматирование для результата
-    RANDOM_SLEEP = 'HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nX-Custom-Header: MyCustomHeader\r\n\r\nRandom Sleep: {sleep_time} seconds'  # Возможно потребуется форматирование для времени сна
-    RANDOM_STATUS = 'HTTP/1.1 {status_code} {reason}\r\nContent-Type: text/plain\r\nX-Custom-Header: MyCustomHeader\r\n\r\nRandom Status: {status_code}'  # Возможно потребуется форматирование для статуса
+    CPU_TASK = 'HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nX-Custom-Header: MyCustomHeader\r\n\r\nCPU Task: {result}'
+    RANDOM_SLEEP = 'HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nX-Custom-Header: MyCustomHeader\r\n\r\nRandom Sleep: {sleep_time} seconds'
+    RANDOM_STATUS = 'HTTP/1.1 {status_code} {reason}\r\nContent-Type: text/plain\r\nX-Custom-Header: MyCustomHeader\r\n\r\nRandom Status: {status_code}'
     CHAIN_STEP_1 = 'HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\nChain Step 1'
     CHAIN_STEP_2 = 'HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\nChain Step 2'
     ERROR_TEST = b'HTTP/1.1 500 Internal Server Error\r\nContent-Type: text/plain\r\nX-Custom-Header: MyCustomHeader\r\n\r\nError Test'

@@ -48,7 +48,7 @@ poetry install
 To start the server, use the command:
 
 ```sh
-poetry run python src.sync.main.py
+poetry run python -m src.synс.main
 ```
 
 </p>
@@ -61,9 +61,14 @@ poetry run python src.sync.main.py
 For load testing with `locust`, use the `locustfile.py`. Start the tests with the command:
 
 ```sh
+poetry run locust -f locustfile.py
+```
+Or, you can activate the virtual environment shell provided by Poetry and run Locust from there:
+
+```sh
+poetry shell
 locust -f locustfile.py
 ```
-
 </p>
 </details>
 

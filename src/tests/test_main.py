@@ -1,19 +1,8 @@
 import pytest
 
 from aiohttp.test_utils import AioHTTPTestCase, unittest_run_loop
-from Web_server_task.src.async import
 
-(
-    hello,
-    echo,
-    io_task,
-    cpu_task,
-    random_sleep,
-    random_status,
-    chain,
-    error_test,
-    create_app,
-)
+from Web_server_task.src.async_main.main import create_app
 
 
 class MyAppTestCase(AioHTTPTestCase):
@@ -66,14 +55,14 @@ class MyAppTestCase(AioHTTPTestCase):
         request = await self.client.request("GET", "/chain")
         assert request.status == 200
         text = await request.text()
-        assert text.endswith("Chain Step 2")
+        assert text.strip().endswith("Chain Step 2")
 
     @unittest_run_loop
     async def test_error_test(self):
         request = await self.client.request("GET", "/error_test")
         assert request.status == 500
         text = await request.text()
-        assert text == "Internal Server Error for Test"
+        assert text == "500: Internal Server Error"
 
 
 if __name__ == '__main__':

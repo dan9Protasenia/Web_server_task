@@ -4,20 +4,20 @@ import random
 
 from aiohttp import web
 
-from consant import LOCAL_HOST, port
+from consant import SyncHost, SyncPort, HTTPResponse, Path
 
 
 async def custom_header_middleware(app, handler):
     async def middleware_handler(request):
         response = await handler(request)
-        response.headers['Custom-Header'] = 'MyCustomHeaderValue'
+        response.headers['Custom-Header'] = HTTPResponse.CUSTOM_HEADER.value
         return response
 
     return middleware_handler
 
 
 async def hello(request):
-    return web.Response(text="Hello, World!")
+    return web.Response(text=HTTPResponse.HELLO.value)
 
 
 async def echo(request):
@@ -31,44 +31,44 @@ async def echo(request):
 
 async def io_task(request):
     await asyncio.sleep(1)
-    return web.Response(text="I/O Task Completed")
+    return web.Response(text=HTTPResponse.IO_TASK.value)
 
 
 async def cpu_task(request):
     result = sum(i for i in range(1000000))
-    return web.Response(text=f"CPU Task Completed: {result}")
+    return web.Response(text=HTTPResponse.CPU_TASK.value.format(result=result))
 
 
 async def random_sleep(request):
     sleep_time = random.uniform(0.1, 1.0)
     await asyncio.sleep(sleep_time)
-    return web.Response(text=f"Slept for {sleep_time:.2f} seconds")
+    return web.Response(text=HTTPResponse.RANDOM_SLEEP.value.format(sleep_time=sleep_time))
 
 
 async def random_status(request):
     statuses = [200, 404, 500]
     status = random.choice(statuses)
-    return web.Response(status=status, text=f"Random Status: {status}")
+    return web.Response(status=status, text=HTTPResponse.RANDOM_STATUS.value.format(status=status))
 
 
 async def chain(request):
     await asyncio.sleep(0.5)
-    response_text = "Chain Step 1\n"
+    response_text = HTTPResponse.CHAIN_STEP_1.value
     await asyncio.sleep(0.5)
-    response_text += "Chain Step 2"
+    response_text += HTTPResponse.CHAIN_STEP_2.value
     return web.Response(text=response_text)
 
 
 async def handle_404(request):
-    return web.Response(text="404: Page not found", status=404)
+    return web.Response(text=HTTPResponse.NOT_FOUND.value, status=404)
 
 
 async def handle_500(request):
-    return web.Response(text="500: Internal Server Error", status=500)
+    return web.Response(text=HTTPResponse.ERROR_500.value, status=500)
 
 
 async def error_test(request):
-    raise web.HTTPInternalServerError(text="Internal Server Error for Test")
+    raise web.HTTPInternalServerError(text=HTTPResponse.ERROR_TEST.value)
 
 
 async def error_middleware(app, handler):
@@ -76,12 +76,15 @@ async def error_middleware(app, handler):
         try:
             response = await handler(request)
             return response
+
         except web.HTTPException as ex:
             if ex.status == 404:
                 return await handle_404(request)
+
             elif ex.status == 500:
                 return await handle_500(request)
             raise
+
         except Exception as ex:
             print(f"Unexpected exception: {ex}")
             return await handle_500(request)
@@ -91,16 +94,16 @@ async def error_middleware(app, handler):
 
 async def create_app():
     app = web.Application(middlewares=[error_middleware, custom_header_middleware])
-    app.router.add_get('/hello', hello)
-    app.router.add_post('/echo', echo)
-    app.router.add_get('/io_task', io_task)
-    app.router.add_get('/cpu_task', cpu_task)
-    app.router.add_get('/random_sleep', random_sleep)
-    app.router.add_get('/random_status', random_status)
-    app.router.add_get('/chain', chain)
-    app.router.add_get('/error_test', error_test)
+    app.router.add_get(Path.HELLO.value, hello)
+    app.router.add_post(Path.ECHO.value, echo)
+    app.router.add_get(Path.IO_TASK.value, io_task)
+    app.router.add_get(Path.CPU_TASK.value, cpu_task)
+    app.router.add_get(Path.RANDOM_SLEEP.value, random_sleep)
+    app.router.add_get(Path.RANDOM_STATUS.value, random_status)
+    app.router.add_get(Path.CHAIN.value, chain)
+    app.router.add_get(Path.ERROR_TEST.value, error_test)
     return app
 
 
 if __name__ == '__main__':
-    app = web.run_app(create_app(), host=LOCAL_HOST, port=port)
+    app = web.run_app(create_app(), host=SyncHost.LOCALHOST.value, port=SyncPort.PORT.value)

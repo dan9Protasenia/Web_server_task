@@ -1,7 +1,7 @@
 import socket
 import time
 import random
-from .constant import SyncHost, SyncPort, Path, HTTPStatus, HTTPResponses
+from constant import SyncHost, SyncPort, Path, HTTPStatus, HTTPResponses
 
 
 def add_custom_header_middleware(response):

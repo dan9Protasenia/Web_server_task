@@ -47,3 +47,17 @@ start-poetry-async:
 start-poetry-sync:
 	@echo "Starting the synchronous server with poetry..."
 	@$(POETRY_RUN_SYNC)
+
+# Run tests with pytest
+test:
+	poetry run pytest
+
+# Check code style with flake8
+lint:
+	poetry run flake8
+
+# Format code with isort
+format:
+	poetry run isort .
+
+.PHONY: lint format

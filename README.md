@@ -7,9 +7,6 @@
 ## Description
 This web server project includes both synchronous and asynchronous servers. The synchronous server handles network tasks such as servicing HTTP requests, performing I/O and CPU-bound tasks, and simulating delays and generating random HTTP status codes. The asynchronous server, using `asyncio` and `aiohttp`, is designed to handle concurrent network tasks efficiently and provides endpoints for various asynchronous operations.
 
-## Description
-This asynchronous web server is designed to handle concurrent network tasks efficiently using `asyncio` and `aiohttp`. It provides endpoints for various asynchronous operations, such as echoing JSON data, performing CPU-bound calculations, and simulating I/O-bound delays.
-
 ## Technologies
 - Python 3.12.0
 - `socket` for synchronous network communication

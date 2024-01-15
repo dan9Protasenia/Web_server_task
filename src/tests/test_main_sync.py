@@ -8,18 +8,18 @@ from .constant import HTTPStatus, HTTPTestRequests, HTTPTestResponses
 
 
 @pytest.fixture
-def mock_conn():
+def mock_conn() -> MagicMock:
     conn = MagicMock()
     return conn
 
 
-def test_hello(mock_conn):
+def test_hello(mock_conn: MagicMock) -> None:
     mock_conn.recv.return_value = HTTPTestRequests.HELLO.value.encode("utf-8")
     handle_request(mock_conn)
     assert mock_conn.sendall.call_args == call(HTTPTestResponses.HELLO.value)
 
 
-def test_io_task(mock_conn):
+def test_io_task(mock_conn: MagicMock) -> None:
     with patch("Web_server_task.src.sync.main.time.sleep") as mock_sleep:
         mock_conn.recv.return_value = HTTPTestRequests.IO_TASK.value.encode("utf-8")
         handle_request(mock_conn)
@@ -27,7 +27,7 @@ def test_io_task(mock_conn):
         assert mock_conn.sendall.call_args == call(HTTPTestResponses.IO_TASK.value)
 
 
-def test_cpu_task(mock_conn):
+def test_cpu_task(mock_conn: MagicMock) -> None:
     mock_conn.recv.return_value = HTTPTestRequests.CPU_TASK.value.encode("utf-8")
     handle_request(mock_conn)
     expected_result = sum(i for i in range(10**6))
@@ -35,7 +35,7 @@ def test_cpu_task(mock_conn):
     assert mock_conn.sendall.call_args == call(expected_response.encode("utf-8"))
 
 
-def test_random_sleep(mock_conn):
+def test_random_sleep(mock_conn: MagicMock) -> None:
     with patch("Web_server_task.src.sync.main.random.uniform", return_value=0.5) as mock_random:
         with patch("Web_server_task.src.sync.main.time.sleep") as mock_sleep:
             mock_conn.recv.return_value = HTTPTestRequests.RANDOM_SLEEP.value.encode("utf-8")
@@ -46,7 +46,7 @@ def test_random_sleep(mock_conn):
             assert mock_conn.sendall.call_args == call(expected_response)
 
 
-def test_random_status(mock_conn):
+def test_random_status(mock_conn: MagicMock) -> None:
     with patch("Web_server_task.src.sync.main.random.choice", return_value=404) as mock_random:
         mock_conn.recv.return_value = HTTPTestRequests.RANDOM_STATUS.value.encode("utf-8")
         handle_request(mock_conn)
@@ -57,7 +57,7 @@ def test_random_status(mock_conn):
         assert mock_conn.sendall.call_args == call(expected_response)
 
 
-def test_chain(mock_conn):
+def test_chain(mock_conn: MagicMock) -> None:
     mock_conn.recv.return_value = HTTPTestRequests.CHAIN.value.encode("utf-8")
     handle_request(mock_conn)
     expected_calls = [
@@ -67,13 +67,13 @@ def test_chain(mock_conn):
     mock_conn.sendall.assert_has_calls(expected_calls, any_order=False)
 
 
-def test_error_test(mock_conn):
+def test_error_test(mock_conn: MagicMock) -> None:
     mock_conn.recv.return_value = HTTPTestRequests.ERROR_TEST.value.encode("utf-8")
     handle_request(mock_conn)
     assert mock_conn.sendall.call_args == call(HTTPTestResponses.ERROR_TEST.value)
 
 
-def test_not_found(mock_conn):
+def test_not_found(mock_conn: MagicMock) -> None:
     mock_conn.recv.return_value = "GET /nonexistentpath HTTP/1.1\r\nHost: localhost\r\n\r\n".encode("utf-8")
     handle_request(mock_conn)
     expected_response = HTTPStatus.NOT_FOUND.value.encode("utf-8")

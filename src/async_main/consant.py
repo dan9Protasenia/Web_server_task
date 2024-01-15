@@ -2,7 +2,7 @@ from enum import Enum
 
 
 class SyncHost(Enum):
-    LOCALHOST = 'localhost'
+    LOCALHOST = "localhost"
 
 
 class SyncPort(Enum):
@@ -20,12 +20,12 @@ class HTTPResponse(Enum):
     ERROR_TEST = "Internal Server Error for Test"
     NOT_FOUND = "404: Page not found"
     ERROR_500 = "500: Internal Server Error"
-    CUSTOM_HEADER = 'MyCustomHeaderValue'
+    CUSTOM_HEADER = "MyCustomHeaderValue"
 
 
 class Path(Enum):
     HELLO = "/hello"
-    ECHO = '/echo'
+    ECHO = "/echo"
     IO_TASK = "/io_task"
     CPU_TASK = "/cpu_task"
     RANDOM_SLEEP = "/random_sleep"

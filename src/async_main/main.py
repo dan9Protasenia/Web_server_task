@@ -4,13 +4,13 @@ import random
 
 from aiohttp import web
 
-from consant import SyncHost, SyncPort, HTTPResponse, Path
+from .consant import HTTPResponse, Path, SyncHost, SyncPort
 
 
 async def custom_header_middleware(app, handler):
     async def middleware_handler(request):
         response = await handler(request)
-        response.headers['Custom-Header'] = HTTPResponse.CUSTOM_HEADER.value
+        response.headers["Custom-Header"] = HTTPResponse.CUSTOM_HEADER.value
         return response
 
     return middleware_handler
@@ -31,23 +31,27 @@ async def echo(request):
 
 async def io_task(request):
     await asyncio.sleep(1)
+
     return web.Response(text=HTTPResponse.IO_TASK.value)
 
 
 async def cpu_task(request):
     result = sum(i for i in range(1000000))
+
     return web.Response(text=HTTPResponse.CPU_TASK.value.format(result=result))
 
 
 async def random_sleep(request):
     sleep_time = random.uniform(0.1, 1.0)
     await asyncio.sleep(sleep_time)
+
     return web.Response(text=HTTPResponse.RANDOM_SLEEP.value.format(sleep_time=sleep_time))
 
 
 async def random_status(request):
     statuses = [200, 404, 500]
     status = random.choice(statuses)
+
     return web.Response(status=status, text=HTTPResponse.RANDOM_STATUS.value.format(status=status))
 
 
@@ -56,6 +60,7 @@ async def chain(request):
     response_text = HTTPResponse.CHAIN_STEP_1.value
     await asyncio.sleep(0.5)
     response_text += HTTPResponse.CHAIN_STEP_2.value
+
     return web.Response(text=response_text)
 
 
@@ -102,8 +107,9 @@ async def create_app():
     app.router.add_get(Path.RANDOM_STATUS.value, random_status)
     app.router.add_get(Path.CHAIN.value, chain)
     app.router.add_get(Path.ERROR_TEST.value, error_test)
+
     return app
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app = web.run_app(create_app(), host=SyncHost.LOCALHOST.value, port=SyncPort.PORT.value)

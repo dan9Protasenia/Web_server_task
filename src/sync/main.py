@@ -1,23 +1,22 @@
-import socket
-import time
 import random
-from constant import SyncHost, SyncPort, Path, HTTPStatus, HTTPResponses
+import signal
+import socket
+import sys
+import time
+
+from .constant import HTTPResponses, HTTPStatus, Path, SyncHost, SyncPort
 
 
 def add_custom_header_middleware(response):
     headers_end = response.find("\r\n\r\n") + 2
 
-    response = (
-            response[:headers_end] +
-            HTTPResponses.CUSTOM_HEADER.value +
-            response[headers_end:]
-    )
+    response = response[:headers_end] + HTTPResponses.CUSTOM_HEADER.value + response[headers_end:]
     return response
 
 
 def handle_request(conn):
-    request_data = conn.recv(1024).decode('utf-8')
-    request = request_data.split('\n')
+    request_data = conn.recv(1024).decode("utf-8")
+    request = request_data.split("\n")
     path = request[0].split()[1]
 
     if path == Path.HELLO.value:
@@ -28,7 +27,7 @@ def handle_request(conn):
         response = HTTPResponses.IO_TASK.value
 
     elif path == Path.CPU_TASK.value:
-        result = sum(i for i in range(10 ** 6))
+        result = sum(i for i in range(10**6))
         response = HTTPResponses.CPU_TASK.value.format(status=HTTPStatus.OK.value, result=result)
 
     elif path == Path.RANDOM_SLEEP.value:
@@ -43,11 +42,10 @@ def handle_request(conn):
 
     elif path == Path.CHAIN.value:
         response = HTTPResponses.CHAIN_STEP_1.value
-        conn.sendall(response.encode('utf-8'))
+        conn.sendall(response.encode("utf-8"))
         time.sleep(0.5)
         response = HTTPResponses.CHAIN_STEP_2.value
-        conn.sendall(response.encode('utf-8'))
-        return
+        conn.sendall(response.encode("utf-8"))
 
     elif path == Path.ERROR_TEST.value:
         response = HTTPResponses.ERROR_TEST.value
@@ -56,27 +54,47 @@ def handle_request(conn):
         response = HTTPResponses.NOT_FOUND_RESPONSE.value
 
     response = add_custom_header_middleware(response)
-    conn.sendall(response.encode('utf-8'))
+    conn.sendall(response.encode("utf-8"))
     conn.close()
 
 
-status_code_map = {
-    200: "OK",
-    404: "Not Found",
-    500: "Internal Server Error"
-}
+def close_server(sock):
+    sock.close()
+    print("Server closed")
+    sys.exit(0)
+
+
+def signal_handler(signum, frame):
+    print(f"Received signal: {signum}")
+    close_server(sock)
+
+
+status_code_map = {200: "OK", 404: "Not Found", 500: "Internal Server Error"}
 
 
 def start():
+    global sock
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.bind((SyncHost.LOCALHOST.value, SyncPort.PORT.value))
     sock.listen(1)
-    print(f'Server listening on port {SyncPort.PORT.value}')
+    sock.settimeout(1)
+    print(f"Server listening on port {SyncPort.PORT.value}")
 
-    while True:
-        conn, addr = sock.accept()
-        print(f"Address: {addr}, Port: {SyncPort.PORT.value}")
-        handle_request(conn)
+    signal.signal(signal.SIGINT, signal_handler)
+    signal.signal(signal.SIGTERM, signal_handler)
+
+    try:
+        while True:
+            try:
+                conn, addr = sock.accept()
+            except socket.timeout:
+                continue
+            except KeyboardInterrupt:
+                break
+            else:
+                handle_request(conn)
+    finally:
+        close_server(sock)
 
 
 if __name__ == "__main__":

@@ -7,14 +7,13 @@ import time
 from .constant import HTTPResponses, HTTPStatus, Path, SyncHost, SyncPort
 
 
-def add_custom_header_middleware(response):
+def add_custom_header_middleware(response: str) -> str:
     headers_end = response.find("\r\n\r\n") + 2
-
     response = response[:headers_end] + HTTPResponses.CUSTOM_HEADER.value + response[headers_end:]
     return response
 
 
-def handle_request(conn):
+def handle_request(conn: socket.socket) -> None:
     request_data = conn.recv(1024).decode("utf-8")
     request = request_data.split("\n")
     path = request[0].split()[1]
@@ -27,7 +26,7 @@ def handle_request(conn):
         response = HTTPResponses.IO_TASK.value
 
     elif path == Path.CPU_TASK.value:
-        result = sum(i for i in range(10**6))
+        result = sum(i for i in range(10 ** 6))
         response = HTTPResponses.CPU_TASK.value.format(status=HTTPStatus.OK.value, result=result)
 
     elif path == Path.RANDOM_SLEEP.value:
@@ -58,13 +57,13 @@ def handle_request(conn):
     conn.close()
 
 
-def close_server(sock):
+def close_server(sock: socket.socket) -> None:
     sock.close()
     print("Server closed")
     sys.exit(0)
 
 
-def signal_handler(signum, frame):
+def signal_handler(signum: int, frame) -> None:
     print(f"Received signal: {signum}")
     close_server(sock)
 
@@ -72,7 +71,7 @@ def signal_handler(signum, frame):
 status_code_map = {200: "OK", 404: "Not Found", 500: "Internal Server Error"}
 
 
-def start():
+def start() -> None:
     global sock
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.bind((SyncHost.LOCALHOST.value, SyncPort.PORT.value))

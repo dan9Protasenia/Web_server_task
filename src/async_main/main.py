@@ -7,8 +7,8 @@ from aiohttp import web
 from .consant import HTTPResponse, Path, SyncHost, SyncPort
 
 
-async def custom_header_middleware(app, handler):
-    async def middleware_handler(request):
+async def custom_header_middleware(app: web.Application, handler) -> web.Response:
+    async def middleware_handler(request: web.Request) -> web.Response:
         response = await handler(request)
         response.headers["Custom-Header"] = HTTPResponse.CUSTOM_HEADER.value
         return response
@@ -16,11 +16,11 @@ async def custom_header_middleware(app, handler):
     return middleware_handler
 
 
-async def hello(request):
+async def hello(request: web.Request) -> web.Response:
     return web.Response(text=HTTPResponse.HELLO.value)
 
 
-async def echo(request):
+async def echo(request: web.Request) -> web.Response:
     try:
         data = await request.json()
     except json.JSONDecodeError:
@@ -29,33 +29,33 @@ async def echo(request):
     return web.json_response(data)
 
 
-async def io_task(request):
+async def io_task(request: web.Request) -> web.Response:
     await asyncio.sleep(1)
 
     return web.Response(text=HTTPResponse.IO_TASK.value)
 
 
-async def cpu_task(request):
+async def cpu_task(request: web.Request) -> web.Response:
     result = sum(i for i in range(1000000))
 
     return web.Response(text=HTTPResponse.CPU_TASK.value.format(result=result))
 
 
-async def random_sleep(request):
+async def random_sleep(request: web.Request) -> web.Response:
     sleep_time = random.uniform(0.1, 1.0)
     await asyncio.sleep(sleep_time)
 
     return web.Response(text=HTTPResponse.RANDOM_SLEEP.value.format(sleep_time=sleep_time))
 
 
-async def random_status(request):
+async def random_status(request: web.Request) -> web.Response:
     statuses = [200, 404, 500]
     status = random.choice(statuses)
 
     return web.Response(status=status, text=HTTPResponse.RANDOM_STATUS.value.format(status=status))
 
 
-async def chain(request):
+async def chain(request: web.Request) -> web.Response:
     await asyncio.sleep(0.5)
     response_text = HTTPResponse.CHAIN_STEP_1.value
     await asyncio.sleep(0.5)
@@ -64,20 +64,20 @@ async def chain(request):
     return web.Response(text=response_text)
 
 
-async def handle_404(request):
+async def handle_404(request: web.Request) -> web.Response:
     return web.Response(text=HTTPResponse.NOT_FOUND.value, status=404)
 
 
-async def handle_500(request):
+async def handle_500(request: web.Request) -> web.Response:
     return web.Response(text=HTTPResponse.ERROR_500.value, status=500)
 
 
-async def error_test(request):
+async def error_test(request: web.Request) -> web.Response:
     raise web.HTTPInternalServerError(text=HTTPResponse.ERROR_TEST.value)
 
 
-async def error_middleware(app, handler):
-    async def middleware_handler(request):
+async def error_middleware(app: web.Application, handler) -> web.Response:
+    async def middleware_handler(request: web.Request) -> web.Response:
         try:
             response = await handler(request)
             return response
@@ -97,7 +97,7 @@ async def error_middleware(app, handler):
     return middleware_handler
 
 
-async def create_app():
+async def create_app() -> web.Application:
     app = web.Application(middlewares=[error_middleware, custom_header_middleware])
     app.router.add_get(Path.HELLO.value, hello)
     app.router.add_post(Path.ECHO.value, echo)

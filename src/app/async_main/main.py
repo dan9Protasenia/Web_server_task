@@ -5,7 +5,7 @@ import random
 from aiohttp import web
 
 from app.core.weather_api.weather_client import WeatherClient
-from consant import HTTPResponse, Path, SyncHost, SyncPort
+from app.async_main.consant import HTTPResponse, Path, SyncHost, SyncPort
 
 
 async def custom_header_middleware(app: web.Application, handler) -> web.Response:

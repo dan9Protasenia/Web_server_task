@@ -6,7 +6,7 @@ import time
 import json
 
 from urllib.parse import urlparse, parse_qs
-from constant import HTTPResponses, HTTPStatus, Path, SyncHost, SyncPort
+from app.sync.constant import HTTPResponses, HTTPStatus, Path, SyncHost, SyncPort
 from app.core.weather_api.weather_client import WeatherClient
 
 

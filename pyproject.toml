@@ -34,6 +34,9 @@ ensure_newline_before_comments = true
 [tool.black]
 line-length = 120
 
+[[tool.poetry.packages]]
+include = "app"
+from = "src"
 
 [build-system]
 requires = ["poetry-core"]

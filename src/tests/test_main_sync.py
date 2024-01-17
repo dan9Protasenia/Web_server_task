@@ -2,7 +2,7 @@ from unittest.mock import MagicMock, call, patch
 
 import pytest
 
-from Web_server_task.src.sync.main import handle_request
+from Web_server_task.src.app.sync.main import handle_request
 
 from .constant import HTTPStatus, HTTPTestRequests, HTTPTestResponses
 
@@ -20,7 +20,7 @@ def test_hello(mock_conn: MagicMock) -> None:
 
 
 def test_io_task(mock_conn: MagicMock) -> None:
-    with patch("Web_server_task.src.sync.main.time.sleep") as mock_sleep:
+    with patch("Web_server_task.src.app.sync.main.time.sleep") as mock_sleep:
         mock_conn.recv.return_value = HTTPTestRequests.IO_TASK.value.encode("utf-8")
         handle_request(mock_conn)
         mock_sleep.assert_called_once_with(1)
@@ -36,8 +36,8 @@ def test_cpu_task(mock_conn: MagicMock) -> None:
 
 
 def test_random_sleep(mock_conn: MagicMock) -> None:
-    with patch("Web_server_task.src.sync.main.random.uniform", return_value=0.5) as mock_random:
-        with patch("Web_server_task.src.sync.main.time.sleep") as mock_sleep:
+    with patch("Web_server_task.src.app.sync.main.random.uniform", return_value=0.5) as mock_random:
+        with patch("Web_server_task.src.app.sync.main.time.sleep") as mock_sleep:
             mock_conn.recv.return_value = HTTPTestRequests.RANDOM_SLEEP.value.encode("utf-8")
             handle_request(mock_conn)
             assert mock_random.call_args == call(0.1, 1.0)
@@ -47,7 +47,7 @@ def test_random_sleep(mock_conn: MagicMock) -> None:
 
 
 def test_random_status(mock_conn: MagicMock) -> None:
-    with patch("Web_server_task.src.sync.main.random.choice", return_value=404) as mock_random:
+    with patch("Web_server_task.src.app.sync.main.random.choice", return_value=404) as mock_random:
         mock_conn.recv.return_value = HTTPTestRequests.RANDOM_STATUS.value.encode("utf-8")
         handle_request(mock_conn)
         assert mock_random.call_args == call([200, 404, 500])

@@ -1,6 +1,6 @@
 from aiohttp.test_utils import AioHTTPTestCase, unittest_run_loop
 from aiohttp.web import Application
-from Web_server_task.src.async_main.main import create_app
+from Web_server_task.src.app.async_main.main import create_app
 
 
 class MyAppTestCase(AioHTTPTestCase):

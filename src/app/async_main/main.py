@@ -4,7 +4,8 @@ import random
 
 from aiohttp import web
 
-from .consant import HTTPResponse, Path, SyncHost, SyncPort
+from app.core.weather_api.weather_client import WeatherClient
+from consant import HTTPResponse, Path, SyncHost, SyncPort
 
 
 async def custom_header_middleware(app: web.Application, handler) -> web.Response:
@@ -97,6 +98,24 @@ async def error_middleware(app: web.Application, handler) -> web.Response:
     return middleware_handler
 
 
+async def weather(request: web.Request) -> web.Request:
+    latitude = request.query.get('latitude')
+    longitude = request.query.get('longitude')
+
+    if not latitude or not longitude:
+        raise web.HTTPBadRequest(reason="Missing latitude or longitude parameter")
+
+    try:
+        weather_client = WeatherClient()
+        current_weather = await weather_client.fetch_current_weather_async(latitude=float(latitude),
+                                                                     longitude=float(longitude))
+        return web.json_response(current_weather.dict())
+    except Exception as e:
+        print(f"Error fetching weather data: {e}")
+
+        raise web.HTTPInternalServerError()
+
+
 async def create_app() -> web.Application:
     app = web.Application(middlewares=[error_middleware, custom_header_middleware])
     app.router.add_get(Path.HELLO.value, hello)
@@ -107,6 +126,7 @@ async def create_app() -> web.Application:
     app.router.add_get(Path.RANDOM_STATUS.value, random_status)
     app.router.add_get(Path.CHAIN.value, chain)
     app.router.add_get(Path.ERROR_TEST.value, error_test)
+    app.router.add_get(Path.WEATHER.value, weather)
 
     return app
 

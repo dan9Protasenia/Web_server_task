@@ -3,8 +3,11 @@ import signal
 import socket
 import sys
 import time
+import json
 
-from .constant import HTTPResponses, HTTPStatus, Path, SyncHost, SyncPort
+from urllib.parse import urlparse, parse_qs
+from constant import HTTPResponses, HTTPStatus, Path, SyncHost, SyncPort
+from app.core.weather_api.weather_client import WeatherClient
 
 
 def add_custom_header_middleware(response: str) -> str:
@@ -48,6 +51,29 @@ def handle_request(conn: socket.socket) -> None:
 
     elif path == Path.ERROR_TEST.value:
         response = HTTPResponses.ERROR_TEST.value
+
+    elif path.startswith(Path.WEATHER.value):
+        query_params = parse_qs(urlparse(request[0]).query)
+        latitude = query_params.get('latitude')
+        longitude = query_params.get('longitude')
+
+        if not latitude or not longitude:
+            conn.sendall(HTTPResponses.BAD_REQUEST.value.encode("utf-8"))
+            conn.close()
+
+            return
+
+        try:
+            weather_client = WeatherClient()
+            current_weather = weather_client.fetch_current_weather_sync(latitude=float(latitude[0]),
+                                                                        longitude=float(longitude[0]))
+
+            response_body = json.dumps(current_weather.dict())
+            response = HTTPResponses.WEATHER_RESPONSE.value.format(status=HTTPStatus.OK.value, response_body=response_body)
+
+        except Exception as e:
+            print(f"Error fetching weather data: {e}")
+            response = HTTPResponses.WEATHER_ERROR.value
 
     else:
         response = HTTPResponses.NOT_FOUND_RESPONSE.value

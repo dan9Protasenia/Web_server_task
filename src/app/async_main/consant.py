@@ -32,3 +32,4 @@ class Path(Enum):
     RANDOM_STATUS = "/random_status"
     CHAIN = "/chain"
     ERROR_TEST = "/error_test"
+    WEATHER = "/weather"

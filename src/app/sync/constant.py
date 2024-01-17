@@ -13,6 +13,7 @@ class HTTPStatus(Enum):
     OK = "200 OK"
     NOT_FOUND = "404 Not Found"
     INTERNAL_SERVER_ERROR = "500 Internal Server Error"
+    BAD_REQUEST = "Missing latitude or longitude parameter"
 
 
 class HTTPResponses(Enum):
@@ -26,6 +27,9 @@ class HTTPResponses(Enum):
     ERROR_TEST = f"HTTP/1.1 {HTTPStatus.INTERNAL_SERVER_ERROR.value}\r\nContent-Type: text/plain\r\n\r\nError Test"
     NOT_FOUND_RESPONSE = f"HTTP/1.1 {HTTPStatus.NOT_FOUND.value}\r\nContent-Type: text/plain\r\n\r\n404 Not Found"
     CUSTOM_HEADER = "X-Custom-Header: MyCustomHeader\r\n"
+    BAD_REQUEST = f"HTTP/1.1 {HTTPStatus.BAD_REQUEST.value}\r\n"
+    WEATHER_RESPONSE = "HTTP/1.1\r\n\r\n{response_body}"
+    WEATHER_ERROR = f"HTTP/1.1 {HTTPStatus.INTERNAL_SERVER_ERROR.value}\r\nr"
 
 
 class Path(Enum):
@@ -36,3 +40,4 @@ class Path(Enum):
     RANDOM_STATUS = "/random_status"
     CHAIN = "/chain"
     ERROR_TEST = "/error_test"
+    WEATHER = "/weather"

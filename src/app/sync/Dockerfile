@@ -2,7 +2,7 @@ FROM python:3.10-slim
 
 WORKDIR /usr/src/app
 
-COPY ../../pyproject.toml poetry.lock ./
+COPY ../../../pyproject.toml poetry.lock ./
 
 RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
 
@@ -16,6 +16,6 @@ RUN poetry config virtualenvs.create false \
 
 COPY . .
 
-EXPOSE 8002
+EXPOSE 8001
 
 CMD ["python", "./main.py"]

@@ -37,7 +37,9 @@ optional = true
 [tool.poetry.group.test.dependencies]
 pytest = "^7.3.1"
 aiohttp = "^3.9.1"
-
+pytest-cov = "^4.1.0"
+httpx = "^0.26.0"
+pydantic = "^2.5.3"
 
 # Dev group
 [tool.poetry.dev-dependencies]
@@ -68,6 +70,14 @@ ensure_newline_before_comments = true
 line-length = 120
 
 ## Tests
-# [tool.pytest.ini_options]
-# addopts = ...
-# # ToDo: expand me!
+[tool.pytest.ini_options]
+addopts = "-v -s"
+testpaths = ["tests"]
+pythonpath = ["."]
+
+python_files = [
+    "test_main_async.py",
+    "test_main_sync.py",
+]
+
+

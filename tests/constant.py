@@ -6,7 +6,8 @@ class HTTPStatus(Enum):
     NOT_FOUND = (
         "HTTP/1.1 404 Not Found\r\nContent-Type: text/plain\r\nX-Custom-Header: MyCustomHeader\r\n\r\n404 Not Found"
     )
-    INTERNAL_SERVER_ERROR = "HTTP/1.1 500 Internal Server Error\r\nContent-Type: text/plain\r\nX-Custom-Header: MyCustomHeader\r\n\r\n500 Internal Server Error"
+    INTERNAL_SERVER_ERROR = ("HTTP/1.1 500 Internal Server Error\r\nContent-Type: text/plain\r\nX-Custom-Header: "
+                             "MyCustomHeader\r\n\r\n500 Internal Server Error")
 
 
 class HTTPTestRequests(Enum):
@@ -25,8 +26,11 @@ class HTTPTestResponses(Enum):
     CPU_TASK = (
         "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nX-Custom-Header: MyCustomHeader\r\n\r\nCPU Task: {result}"
     )
-    RANDOM_SLEEP = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nX-Custom-Header: MyCustomHeader\r\n\r\nRandom Sleep: {sleep_time} seconds"
-    RANDOM_STATUS = "HTTP/1.1 {status_code} {reason}\r\nContent-Type: text/plain\r\nX-Custom-Header: MyCustomHeader\r\n\r\nRandom Status: {status_code}"
+    RANDOM_SLEEP = ("HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nX-Custom-Header:"
+                    " MyCustomHeader\r\n\r\nRandom Sleep: {sleep_time} seconds")
+    RANDOM_STATUS = ("HTTP/1.1 {status_code} {reason}\r\nContent-Type: text/plain\r\nX-Custom-Header:"
+                     " MyCustomHeader\r\n\r\nRandom Status: {status_code}")
     CHAIN_STEP_1 = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\nChain Step 1"
     CHAIN_STEP_2 = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\nChain Step 2"
-    ERROR_TEST = b"HTTP/1.1 500 Internal Server Error\r\nContent-Type: text/plain\r\nX-Custom-Header: MyCustomHeader\r\n\r\nError Test"
+    ERROR_TEST = (b"HTTP/1.1 500 Internal Server Error\r\nContent-Type: text/plain\r\nX-Custom-Header:"
+                  b" MyCustomHeader\r\n\r\nError Test")

@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "web-server"
 version = "0.1.0"
-description = ""  # ToDo: Some description?
+description = "Sync and Async Web Server"
 authors = ["Daniil Protasenia <danikprotaseney@gmail.com>"]
 readme = "README.md"
 
@@ -27,7 +27,7 @@ asyncio = "^3.4.3"
 pytest = "^7.4.4"
 httpx = "^0.26.0"
 pydantic = "^2.5.3"
-locust = "^2.20.0"  # ToDo: In which group I should to be related?
+locust = "^2.20.0"
 
 
 # Apps for test build
@@ -36,7 +36,7 @@ optional = true
 
 [tool.poetry.group.test.dependencies]
 pytest = "^7.3.1"
-# ToDo: expand me!
+aiohttp = "^3.9.1"
 
 
 # Dev group
@@ -66,11 +66,6 @@ ensure_newline_before_comments = true
 
 [tool.black]
 line-length = 120
-
-# ToDo: you dont really need this v
-# [[tool.poetry.packages]]
-# include = "app"
-# from = "src"
 
 ## Tests
 # [tool.pytest.ini_options]

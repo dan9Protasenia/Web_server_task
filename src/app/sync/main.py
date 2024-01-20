@@ -1,13 +1,13 @@
+import json
 import random
 import signal
 import socket
 import sys
 import time
-import json
+from urllib.parse import parse_qs, urlparse
 
-from urllib.parse import urlparse, parse_qs
-from app.sync.constant import HTTPResponses, HTTPStatus, Path, SyncHost, SyncPort
-from app.core.weather_api.weather_client import WeatherClient
+from ..core.enums.constant_sync import HTTPResponses, HTTPStatus, Path, SyncHost, SyncPort
+from ..core.modules.weather_client import WeatherClient
 
 
 def add_custom_header_middleware(response: str) -> str:
@@ -29,7 +29,7 @@ def handle_request(conn: socket.socket) -> None:
         response = HTTPResponses.IO_TASK.value
 
     elif path == Path.CPU_TASK.value:
-        result = sum(i for i in range(10 ** 6))
+        result = sum(i for i in range(10**6))
         response = HTTPResponses.CPU_TASK.value.format(status=HTTPStatus.OK.value, result=result)
 
     elif path == Path.RANDOM_SLEEP.value:
@@ -54,8 +54,8 @@ def handle_request(conn: socket.socket) -> None:
 
     elif path.startswith(Path.WEATHER.value):
         query_params = parse_qs(urlparse(request[0]).query)
-        latitude = query_params.get('latitude')
-        longitude = query_params.get('longitude')
+        latitude = query_params.get("latitude")
+        longitude = query_params.get("longitude")
 
         if not latitude or not longitude:
             conn.sendall(HTTPResponses.BAD_REQUEST.value.encode("utf-8"))
@@ -65,11 +65,14 @@ def handle_request(conn: socket.socket) -> None:
 
         try:
             weather_client = WeatherClient()
-            current_weather = weather_client.fetch_current_weather_sync(latitude=float(latitude[0]),
-                                                                        longitude=float(longitude[0]))
+            current_weather = weather_client.fetch_current_weather_sync(
+                latitude=float(latitude[0]), longitude=float(longitude[0])
+            )
 
             response_body = json.dumps(current_weather.dict())
-            response = HTTPResponses.WEATHER_RESPONSE.value.format(status=HTTPStatus.OK.value, response_body=response_body)
+            response = HTTPResponses.WEATHER_RESPONSE.value.format(
+                status=HTTPStatus.OK.value, response_body=response_body
+            )
 
         except Exception as e:
             print(f"Error fetching weather data: {e}")

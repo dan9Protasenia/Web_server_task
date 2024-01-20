@@ -20,13 +20,13 @@ default:
 sync-up: sync-build sync-run
 
 sync-build:
-	docker build -t sync-app -f src/app/sync_main/Dockerfile .
+	docker build -t sync-app -f src/app/sync/Dockerfile .
 
 sync-run:
 	docker run -p 8001:8001 sync-app
 
 ## Async
-async-up: sync-build sync-run
+async-up: async-build async-run
 
 async-build:
 	docker build -t async-app -f src/app/async_main/Dockerfile .

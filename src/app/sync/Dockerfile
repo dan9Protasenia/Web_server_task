@@ -21,7 +21,7 @@ ENV PATH="$POETRY_HOME/bin:$POETRY_VIRTUALENVS_PATH/bin:$PATH"
 FROM base as builder
 
 RUN apt-get update \
-    && apt-get install --no-install-recommends -y curl \
+    && apt-get install --no-install-recommends -y curl gcc python3-dev \
     && curl -sSL https://install.python-poetry.org | python - --version 1.6.1 \
     && apt-get remove -y curl \
     && apt-get -y autoremove \

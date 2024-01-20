@@ -2,8 +2,7 @@ from unittest.mock import MagicMock, call, patch
 
 import pytest
 
-from Web_server_task.src.app.sync.main import handle_request
-
+from ..src.app.sync.main import handle_request
 from .constant import HTTPStatus, HTTPTestRequests, HTTPTestResponses
 
 

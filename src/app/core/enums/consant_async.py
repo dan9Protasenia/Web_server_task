@@ -2,7 +2,7 @@ from enum import Enum
 
 
 class SyncHost(Enum):
-    LOCALHOST = "localhost"
+    LOCALHOST = "0.0.0.0"
 
 
 class SyncPort(Enum):

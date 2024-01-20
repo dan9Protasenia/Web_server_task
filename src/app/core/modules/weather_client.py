@@ -24,7 +24,8 @@ class WeatherClient:
         params = {
             "latitude": latitude,
             "longitude": longitude,
-            "current_weather": True,}
+            "current_weather": True,
+        }
         with httpx.Client() as client:
             response = client.get(url, params=params)
             response.raise_for_status()

@@ -120,7 +120,7 @@ async def weather(request: Request) -> Request:
         current_weather = await weather_client.fetch_current_weather_async(
             latitude=float(latitude), longitude=float(longitude)
         )
-        return json_response(current_weather.dict())
+        return json_response(current_weather.model_dump())
     except Exception as e:
         print(f"Error fetching weather data: {e}")
 

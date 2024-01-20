@@ -69,7 +69,7 @@ def handle_request(conn: socket.socket) -> None:
                 latitude=float(latitude[0]), longitude=float(longitude[0])
             )
 
-            response_body = json.dumps(current_weather.dict())
+            response_body = json.dumps(current_weather.model_dump())
             response = HTTPResponses.WEATHER_RESPONSE.value.format(
                 status=HTTPStatus.OK.value, response_body=response_body
             )

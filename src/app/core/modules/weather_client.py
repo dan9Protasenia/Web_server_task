@@ -1,6 +1,6 @@
 import httpx
 
-from ..schemas.data import CurrentWeatherData
+from src.app.core.schemas import CurrentWeatherData
 
 
 class WeatherClient:
@@ -12,7 +12,7 @@ class WeatherClient:
             "latitude": latitude,
             "longitude": longitude,
             "current_weather": True,
-                  }
+        }
         async with httpx.AsyncClient() as client:
             response = await client.get(url, params=params)
             response.raise_for_status()

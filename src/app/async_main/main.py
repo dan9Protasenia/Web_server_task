@@ -13,8 +13,8 @@ from aiohttp.web import (
     json_response,
 )
 
-from ..core.enums.consant_async import HTTPResponse, Path, SyncHost, SyncPort
-from ..core.modules.weather_client import WeatherClient
+from src.app.core.enums.consant_async import HTTPResponse, Path, SyncHost, SyncPort
+from src.app.core.modules import WeatherClient
 
 
 async def custom_header_middleware(app: Application, handler) -> Response:

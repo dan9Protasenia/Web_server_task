@@ -6,8 +6,8 @@ import sys
 import time
 from urllib.parse import parse_qs, urlparse
 
-from ..core.enums.constant_sync import HTTPResponses, HTTPStatus, Path, SyncHost, SyncPort
-from ..core.modules.weather_client import WeatherClient
+from src.app.core.enums.constant_sync import HTTPResponses, HTTPStatus, Path, SyncHost, SyncPort
+from src.app.core.modules import WeatherClient
 
 
 def add_custom_header_middleware(response: str) -> str:
